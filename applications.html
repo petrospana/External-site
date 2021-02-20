@@ -1,0 +1,172 @@
+
+<html>
+
+    <head>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+            <!-- jquery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- Bootstrap CSS -->
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    </head>
+
+
+    
+
+
+<body onload="OpenForm()">
+
+    <h1> Συστημα Διαχείρισης Βρεφονηπιακών Σταθμών</h1>
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #3aadff;">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">My Website</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+              <a class="nav-link "  href="index.html"> <i class="fa fa-home" aria-hidden="true"></i> Home</a>
+              <a class="nav-link "  href="about.html">About</a>
+              <a class="nav-link active" aria-current="page" href="applications.html">Applications (Current)</a>
+            </div>
+          </div>
+        </div>
+      </nav>
+  
+
+      <h1 class="text-center">Applications Page</h1>
+
+      <hr>
+      <button onclick="OpenForm()">Apply</button>
+      <button onclick="OpenSearch()">Search</button>
+
+
+
+<hr>
+<div class="apply" id="apply" style="background-color: #d1d1d1;">
+
+    <div class="container-fluid">
+        <p>Please Fill Out The Form</p>
+        <form id="myform_apply"> 
+            <label for="fname">First name:</label><br>
+            <input type="text" id="fname" name="fname"><br>
+
+            <label for="lname">Last name:</label><br>
+            <input type="text" id="lname" name="lname"><br>
+
+            <label for="date">Date of Birth:</label><br>
+            <input type="date" id="date" name="date" ><br>
+
+            <label for="yearlyIncome">Yearly Income:</label><br>
+            <input type="text" id="yearlyIncome" name="yearlyIncome"><br>
+
+            <label for="fathersName">Father's Name:</label><br>
+            <input type="text" id="fathersName" name="fathersName"><br>
+
+            <label for="mothersName">Mother's Name:</label><br>
+            <input type="text" id="mothersName" name="mothersName"><br><br>
+
+            <!--<input type='reset' value='Reset' name='reset'> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-->
+           <!-- <input type="submit" value="Submit">-->
+        </form> 
+        <button onclick="InsertToDatabase()"> Submit </button>
+        
+    </div>
+</div>
+
+
+<div class="search" id="search" style="background-color: #d1d1d1;">
+    <div class="container-fluid">
+        <p>Please Enter Code to Search</p>
+        <form id="myform_search"> 
+        <label for="acode">Application Code:</label><br>
+        <input type="text" id="acode" name="acode"><br>
+        <!--<input type="submit" value="Submit">-->
+        </form>
+        <button onclick="SearchForCode()"> Search</button>
+    </div>
+</div>
+
+
+
+<script>
+    var code = Math.floor(Math.random() * 1000);
+
+    function OpenForm(){
+        var apply = document.getElementById("apply");
+        var search = document.getElementById("search");
+        apply.style.display = "block";
+        search.style.display = "none";
+
+    }
+
+    function OpenSearch(){
+        var apply = document.getElementById("apply");
+        var search = document.getElementById("search");
+        apply.style.display = "none";
+        search.style.display = "block";
+    }
+
+
+
+   function InsertToDatabase() {
+
+       // document.getElementsByClassName("apply")[0].innerHTML = "You have submitted an application for: " + $("#fname").val() + " "+ $("#lname").val() + "<br>Application Code: " + code;
+
+       $.ajax({
+            url:"database.php",    //the page containing php script
+            type: "post",    //request type,
+            data: {fname: $("#fname").val(), lname: $("#lname").val(), date: $("#date").val(),yearlyIncome: $("#yearlyIncome").val(),fathersName: $("#fathersName").val(), mothersName: $("#mothersName").val(), postAction: "insert"},
+                success:function(data){
+                    document.getElementsByClassName("apply")[0].innerHTML = data;
+                }
+            });
+
+
+        return false;
+    };
+
+
+    function SearchForCode() {
+        //document.getElementsByClassName("search")[0].innerHTML = "Can't Find Applicant With ID:" + code;
+
+              var appID = document.getElementById("acode").value;
+              console.log("searching for:" + appID);
+
+            $.ajax({
+            url:"database.php",    //the page containing php script
+            type: "post",    //request type,
+            data: {searchcode: appID, postAction: "search"},
+                success:function(data){
+                    document.getElementsByClassName("search")[0].innerHTML = data;
+                }
+            });
+    };
+
+
+
+</script>
+
+
+
+<hr>
+ <!-- Option 1: Bootstrap Bundle with Popper -->
+ <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+ <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+</body>
+
+<footer>
+    <br>
+      <!-- Copyright -->
+      <div class="text-center p-3" style="background-color: #3aadff">
+        Copyright &#169; 2021 Mike Panousis
+      <!-- <a class="text-dark" href="https://mdbootstrap.com/">MDBootstrap.com</a> -->
+      </div>
+      <!-- Copyright -->
+</footer>
+
+</html>
